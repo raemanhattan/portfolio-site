@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio Site
 
-## Getting Started
+The landing page at `portfolio.manhattanlabs.io`. Lists each project and
+reverse-proxies its path to that project's own, independently deployed
+frontend — e.g. `/contract-value` proxies to the contract-value-agent
+frontend running elsewhere.
 
-First, run the development server:
+Each project keeps its own repo, its own frontend, and its own backend.
+This shell owns only the domain and the landing page; it never imports a
+project's code directly.
+
+## Adding a project
+
+1. Add an entry to `lib/projects.ts` (name, tagline, stack, `status`).
+2. Add a rewrite pair in `next.config.ts` pointing `/<slug>` and
+   `/<slug>/:path*` at that project's deployed origin, driven by an env var
+   (see `CONTRACT_VALUE_ORIGIN` for the pattern).
+3. Set that env var locally (`.env.local`, copy `.env.local.example`) and in
+   the shell's production deployment once the project has a real URL.
+
+Projects with `status: "in-progress"` show on the landing page but aren't
+linked or rewritten yet.
+
+## Local development
+
+Run this app and the project frontends on different ports so they can
+coexist. This shell defaults to port 3000; contract-value-agent's frontend
+is configured to run on 3001 (see its `package.json`).
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
